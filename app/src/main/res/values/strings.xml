@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Preferences related strings -->
+    <string name="pref_sorting_key">pref_sorting</string>
+    <string name="pref_sorting_title">Sort movies by</string>
+    <string name="pref_sorting_default">popularity.desc</string>
+    <string name="title_pref_activity">Settings</string>
+
+    <!-- Movie Details Activity related strings -->
+    <string name="title_activity_detail">Movie details</string>
+    <string name="image_description">Movie Poster Thumbnail</string>
+</resources>
