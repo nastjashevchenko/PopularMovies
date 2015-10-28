@@ -10,9 +10,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ImageAdapter extends BaseAdapter {
-    private Context mContext;
-    private List<String> mImageUrls;
+class ImageAdapter extends BaseAdapter {
+    private final Context mContext;
+    private final List<String> mImageUrls;
 
     public ImageAdapter(Context c, List<String> urls) {
         mContext = c;
@@ -26,7 +26,7 @@ public class ImageAdapter extends BaseAdapter {
         return null;
     }
 
-    public String getItemUrl(int position) {
+    private String getItemUrl(int position) {
         return mImageUrls.get(position);
     }
 

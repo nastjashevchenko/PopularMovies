@@ -11,4 +11,6 @@
     <!-- Movie Details Activity related strings -->
     <string name="title_activity_detail">Movie details</string>
     <string name="image_description">Movie Poster Thumbnail</string>
+    <string name="release_date">Release date: %s</string>
+    <string name="rating">Rating: %s</string>
 </resources>

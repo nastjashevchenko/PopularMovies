@@ -6,13 +6,14 @@ import org.json.JSONObject;
  /**
  * Class for Movie object, store necessary information about Movie
  */
-public class Movie {
-    private String id;
+ class Movie {
+    private final String id;
     private String posterPath;
     private String title;
     private String releaseDate;
     private String rating;
     private String plot;
+
     private static final String BASE_PATH = "http://image.tmdb.org/t/p/";
     public static final String DEFAULT_SIZE = "w500";
     private static final String SIZE_DETAILS_SCREEN = "w342";

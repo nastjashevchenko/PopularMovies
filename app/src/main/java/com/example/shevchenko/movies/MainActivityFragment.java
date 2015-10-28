@@ -24,9 +24,8 @@ import java.util.List;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-    ImageAdapter imageAdapter;
-    GridView gridview;
-    List<Movie> moviesList;
+    private GridView mGridView;
+    private List<Movie> mMoviesList;
 
     public MainActivityFragment() {
     }
@@ -55,14 +54,14 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        gridview = (GridView) view.findViewById(R.id.movies_grid);
+        mGridView = (GridView) view.findViewById(R.id.movies_grid);
         createMoviesList();
-        gridview.setOnItemClickListener(new OnItemClickListener() {
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Intent movieDetails = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, moviesList.get(position).getId());
+                        .putExtra(Intent.EXTRA_TEXT, mMoviesList.get(position).getId());
                 startActivity(movieDetails);
             }
         });
@@ -73,6 +72,8 @@ public class MainActivityFragment extends Fragment {
         private static final String LOG_TAG = "Movies, GetMoviesInfo";
         private static final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
         private static final String SORT_PARAM = "sort_by";
+        private static final String VOTE_COUNT = "vote_count.gte";
+        private static final String VOTE_VALUE = "100";
 
         private List<Movie> parseResponse(String response) throws JSONException {
             List<Movie> popularMovies = new ArrayList<>();
@@ -91,6 +92,9 @@ public class MainActivityFragment extends Fragment {
             String sort_type = params[0];
             Uri builder = Uri.parse(BASE_URL).buildUpon()
                     .appendQueryParameter(SORT_PARAM, sort_type)
+                    // Return only movies with more than VOTE_VALUE number of votes
+                    // Otherwise, movie with the highest rating can be one with 10/10 rating and 1 vote
+                    .appendQueryParameter(VOTE_COUNT, VOTE_VALUE)
                     .build();
             try {
                 return parseResponse(InternetUtil.getJsonResponseAsString(builder, LOG_TAG));
@@ -107,9 +111,9 @@ public class MainActivityFragment extends Fragment {
                 for (Movie movie : movies) {
                     imageUrls.add(movie.getPosterPath());
                 }
-                imageAdapter = new ImageAdapter(getActivity(), imageUrls);
-                gridview.setAdapter(imageAdapter);
-                moviesList = movies;
+                ImageAdapter imageAdapter = new ImageAdapter(getActivity(), imageUrls);
+                mGridView.setAdapter(imageAdapter);
+                mMoviesList = movies;
             }
         }
     }

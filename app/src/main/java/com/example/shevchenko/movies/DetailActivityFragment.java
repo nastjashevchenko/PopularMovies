@@ -20,13 +20,12 @@ import org.json.JSONException;
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
-    private Movie movie;
-    private String id;
-    private TextView title;
-    private TextView rating;
-    private TextView releaseDate;
-    private TextView plot;
-    private ImageView poster;
+    private static String id;
+    private TextView mTitle;
+    private TextView mRating;
+    private TextView mReleaseDate;
+    private TextView mPlot;
+    private ImageView mPoster;
 
     public DetailActivityFragment() {
     }
@@ -37,11 +36,11 @@ public class DetailActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         id = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
 
-        title = (TextView) rootView.findViewById(R.id.title);
-        rating = (TextView) rootView.findViewById(R.id.rating);
-        releaseDate = (TextView) rootView.findViewById(R.id.release);
-        plot = (TextView) rootView.findViewById(R.id.plot);
-        poster = (ImageView) rootView.findViewById(R.id.poster);
+        mTitle = (TextView) rootView.findViewById(R.id.title);
+        mRating = (TextView) rootView.findViewById(R.id.rating);
+        mReleaseDate = (TextView) rootView.findViewById(R.id.release);
+        mPlot = (TextView) rootView.findViewById(R.id.plot);
+        mPoster = (ImageView) rootView.findViewById(R.id.poster);
 
         GetMovieInfoTask getMovieInfo = new GetMovieInfoTask();
         getMovieInfo.execute(id);
@@ -66,13 +65,15 @@ public class DetailActivityFragment extends Fragment {
         protected void onPostExecute(String response) {
             if (response != null){
                 try {
-                    movie = new Movie(id, response);
-                    title.setText(movie.getTitle());
-                    releaseDate.setText("Release date: " + movie.getReleaseDate());
-                    plot.setText(movie.getPlot());
-                    rating.setText("Rating: " + movie.getRating());
+                    Movie movie = new Movie(id, response);
+                    mTitle.setText(movie.getTitle());
+                    mReleaseDate.setText(getResources().getString(R.string.release_date,
+                            movie.getReleaseDate()));
+                    mPlot.setText(movie.getPlot());
+                    mRating.setText(getResources().getString(R.string.rating,
+                            movie.getRating()));
                     Picasso.with(getActivity()).load(movie.getPosterPath())
-                            .into(poster);
+                            .into(mPoster);
 
                 } catch (JSONException e) {
                     e.printStackTrace();

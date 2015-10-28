@@ -13,13 +13,14 @@ import java.net.URL;
 /**
  * Class with help functions for internet requests
  */
-public class InternetUtil {
+class InternetUtil {
     private static final String API_KEY_PARAM = "api_key";
-    private static final String API_KEY = "";
 
     private static Uri addApiKey(Uri builder) {
         return builder.buildUpon()
-                .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                // Using class to hold API Key and not submitting it to public repo
+                // To run this app replace ApiKey.getApiKey() call with your API key
+                .appendQueryParameter(API_KEY_PARAM, ApiKey.getApiKey())
                 .build();
     }
 
