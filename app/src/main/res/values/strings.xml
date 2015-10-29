@@ -13,4 +13,6 @@
     <string name="image_description">Movie Poster Thumbnail</string>
     <string name="release_date">Release date: %s</string>
     <string name="rating">Rating: %s</string>
+
+    <string name="no_connection_alert">Sorry, no Movies without Internet</string>
 </resources>

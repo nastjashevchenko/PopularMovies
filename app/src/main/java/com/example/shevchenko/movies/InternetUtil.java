@@ -1,5 +1,8 @@
 package com.example.shevchenko.movies;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
@@ -22,6 +25,14 @@ class InternetUtil {
                 // To run this app replace ApiKey.getApiKey() call with your API key
                 .appendQueryParameter(API_KEY_PARAM, ApiKey.getApiKey())
                 .build();
+    }
+
+    public static boolean checkConnection(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
     }
 
     /**

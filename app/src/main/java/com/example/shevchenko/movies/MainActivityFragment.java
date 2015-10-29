@@ -6,12 +6,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +26,7 @@ import java.util.List;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
+
     private GridView mGridView;
     private List<Movie> mMoviesList;
 
@@ -31,10 +34,18 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void createMoviesList(){
-        GetMoviesInfoTask getMovies = new GetMoviesInfoTask();
-        String sorting = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
-                getString(R.string.pref_sorting_key), getString(R.string.pref_sorting_default));
-        getMovies.execute(sorting);
+        if (InternetUtil.checkConnection(getContext())) {
+            GetMoviesInfoTask getMovies = new GetMoviesInfoTask();
+            String sorting = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
+                    getString(R.string.pref_sorting_key), getString(R.string.pref_sorting_default));
+            getMovies.execute(sorting);
+        } else {
+            // TODO: show alert message in Fragment, not Toast
+            Toast toast = Toast.makeText(getContext(), R.string.no_connection_alert,
+                    Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
     @Override
@@ -44,8 +55,8 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         createMoviesList();
     }
 
@@ -74,15 +85,22 @@ public class MainActivityFragment extends Fragment {
         private static final String SORT_PARAM = "sort_by";
         private static final String VOTE_COUNT = "vote_count.gte";
         private static final String VOTE_VALUE = "100";
+        // JSON field names
+        private static final String RESULTS = "results";
+        private static final String MOVIE_ID = "id";
+        private static final String POSTER_PATH = "poster_path";
 
         private List<Movie> parseResponse(String response) throws JSONException {
             List<Movie> popularMovies = new ArrayList<>();
-            JSONArray jsonResponse = new JSONObject(response).getJSONArray("results");
-            for (int i = 0; i < jsonResponse.length(); i++) {
-                Movie movie = new Movie(jsonResponse.getJSONObject(i).getString("id"));
-                movie.setPosterPath(jsonResponse.getJSONObject(i).getString("poster_path"),
-                        Movie.DEFAULT_SIZE);
-                popularMovies.add(movie);
+            // If connectivity check is successful, but response in empty
+            if (response != null) {
+                JSONArray jsonResponse = new JSONObject(response).getJSONArray(RESULTS);
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    Movie movie = new Movie(jsonResponse.getJSONObject(i).getString(MOVIE_ID));
+                    movie.setPosterPath(jsonResponse.getJSONObject(i).getString(POSTER_PATH),
+                            Movie.DEFAULT_SIZE);
+                    popularMovies.add(movie);
+                }
             }
             return popularMovies;
         }
