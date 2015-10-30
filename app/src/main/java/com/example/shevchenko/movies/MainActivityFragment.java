@@ -99,7 +99,7 @@ public class MainActivityFragment extends Fragment {
             if (response != null) {
                 JSONArray jsonResponse = new JSONObject(response).getJSONArray(RESULTS);
                 for (int i = 0; i < jsonResponse.length(); i++) {
-                    Movie movie = new Movie(jsonResponse.getJSONObject(i));
+                    Movie movie = Movie.parseFromJson(jsonResponse.getJSONObject(i));
                     popularMovies.add(movie);
                 }
             }

@@ -38,9 +38,9 @@ public class DetailActivityFragment extends Fragment {
         mTitle.setText(mMovie.getTitle());
         mReleaseDate.setText(getResources().getString(R.string.release_date,
                 mMovie.getReleaseDate()));
-        mPlot.setText(mMovie.getPlot());
+        mPlot.setText(mMovie.getOverview());
         mRating.setText(getResources().getString(R.string.rating,
-                mMovie.getRating()));
+                mMovie.getVoteAverage()));
         Picasso.with(getActivity()).load(mMovie.getPosterPath())
                 .into(mPoster);
 

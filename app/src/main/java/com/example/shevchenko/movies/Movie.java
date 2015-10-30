@@ -3,6 +3,10 @@ package com.example.shevchenko.movies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,40 +15,32 @@ import org.json.JSONObject;
  */
 class Movie implements Parcelable {
     private final String id;
-    private String mPosterPath;
-    private String mTitle;
-    private String mReleaseDate;
-    private String mRating;
-    private String mPlot;
+    private String title;
+    private String releaseDate;
+    private String voteAverage;
+    private String overview;
+    private String posterPath;
 
     private static final String BASE_PATH = "http://image.tmdb.org/t/p/";
     public static final String DEFAULT_SIZE = "w500";
     public static final String EXTRA_NAME = "movie_details";
-
-    // JSON field names
-    private static final String JSON_ID = "id";
-    private static final String JSON_TITLE = "title";
-    private static final String JSON_RELEASE_DATE = "release_date";
-    private static final String JSON_RATING = "vote_average";
-    private static final String JSON_PLOT = "overview";
-    private static final String JSON_POSTER_RELATIVE_PATH = "poster_path";
 
     public Movie(String id) {
         this.id = id;
     }
 
      /**
-      * Constructor to get all necessary Movie fields from JSON response for this movie
-      * from MovieDB API. Id also can be received from JSON, but we already know it, when
-      * sending request.
+      * Static method to get all necessary Movie fields from JSON response for this movie
+      * from MovieDB API.
       */
-    public Movie(JSONObject movieJson) throws JSONException {
-        this.id = movieJson.getString(JSON_ID);
-        this.mTitle = movieJson.getString(JSON_TITLE);
-        this.mReleaseDate = movieJson.getString(JSON_RELEASE_DATE);
-        this.mRating = movieJson.getString(JSON_RATING);
-        this.mPlot = movieJson.getString(JSON_PLOT);
-        setPosterPath(movieJson.getString(JSON_POSTER_RELATIVE_PATH), DEFAULT_SIZE);
+    public static Movie parseFromJson(JSONObject movieJson) throws JSONException {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        Gson gson = gsonBuilder.create();
+
+        Movie movie = gson.fromJson(movieJson.toString(), Movie.class);
+        movie.setPosterPath(movie.posterPath, DEFAULT_SIZE);
+        return movie;
     }
 
     public String getId() {
@@ -57,27 +53,27 @@ class Movie implements Parcelable {
       * relative path, which can be got from JSON response
       */
     public void setPosterPath(String relativePath, String size) {
-        this.mPosterPath = BASE_PATH + size + relativePath;
+        this.posterPath = BASE_PATH + size + relativePath;
     }
 
     public String getPosterPath() {
-        return mPosterPath;
+        return posterPath;
     }
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
     public String getReleaseDate() {
-        return mReleaseDate;
+        return releaseDate;
     }
 
-    public String getRating() {
-        return mRating + "/10";
+    public String getVoteAverage() {
+        return voteAverage + "/10";
     }
 
-    public String getPlot() {
-        return mPlot;
+    public String getOverview() {
+        return overview;
     }
 
      @Override
@@ -88,11 +84,11 @@ class Movie implements Parcelable {
      @Override
      public void writeToParcel(Parcel dest, int flags) {
          dest.writeString(id);
-         dest.writeString(mTitle);
-         dest.writeString(mReleaseDate);
-         dest.writeString(mRating);
-         dest.writeString(mPlot);
-         dest.writeString(mPosterPath);
+         dest.writeString(title);
+         dest.writeString(releaseDate);
+         dest.writeString(voteAverage);
+         dest.writeString(overview);
+         dest.writeString(posterPath);
      }
 
      public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -107,10 +103,10 @@ class Movie implements Parcelable {
 
      private Movie(Parcel in) {
          this.id = in.readString();
-         this.mTitle = in.readString();
-         this.mReleaseDate = in.readString();
-         this.mRating = in.readString();
-         this.mPlot = in.readString();
-         this.mPosterPath = in.readString();
+         this.title = in.readString();
+         this.releaseDate = in.readString();
+         this.voteAverage = in.readString();
+         this.overview = in.readString();
+         this.posterPath = in.readString();
      }
 }
