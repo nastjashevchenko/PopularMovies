@@ -10,11 +10,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
+    @Bind(R.id.title) TextView mTitle;
+    @Bind(R.id.rating) TextView mRating;
+    @Bind(R.id.release) TextView mReleaseDate;
+    @Bind(R.id.plot) TextView mPlot;
+    @Bind(R.id.poster) ImageView mPoster;
 
     public DetailActivityFragment() {
     }
@@ -23,12 +31,9 @@ public class DetailActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        ButterKnife.bind(this, rootView);
+
         Movie mMovie = getActivity().getIntent().getParcelableExtra(Movie.EXTRA_NAME);
-        TextView mTitle = (TextView) rootView.findViewById(R.id.title);
-        TextView mRating = (TextView) rootView.findViewById(R.id.rating);
-        TextView mReleaseDate = (TextView) rootView.findViewById(R.id.release);
-        TextView mPlot = (TextView) rootView.findViewById(R.id.plot);
-        ImageView mPoster = (ImageView) rootView.findViewById(R.id.poster);
 
         mTitle.setText(mMovie.getTitle());
         mReleaseDate.setText(getResources().getString(R.string.release_date,

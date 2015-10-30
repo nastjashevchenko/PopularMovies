@@ -22,12 +22,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-
-    private GridView mGridView;
+    // Don't really think that there is sence in binding when there is only one view
+    // Keeping it for consistency with DetailActivityFragment
+    @Bind(R.id.movies_grid) GridView mGridView;
     private List<Movie> mMoviesList;
 
     public MainActivityFragment() {
@@ -65,7 +69,7 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        mGridView = (GridView) view.findViewById(R.id.movies_grid);
+        ButterKnife.bind(this, view);
         createMoviesList();
         mGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
