@@ -14,5 +14,6 @@
     <string name="release_date">Release date: %s</string>
     <string name="rating">Rating: %s</string>
 
+    <!-- User messages -->
     <string name="no_connection_alert">Sorry, no Movies without Internet</string>
 </resources>

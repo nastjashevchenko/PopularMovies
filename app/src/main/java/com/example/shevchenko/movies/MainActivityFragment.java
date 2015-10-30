@@ -71,8 +71,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                Movie movie = mMoviesList.get(position);
                 Intent movieDetails = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, mMoviesList.get(position).getId());
+                        .putExtra(Movie.EXTRA_NAME, movie);
                 startActivity(movieDetails);
             }
         });
@@ -87,8 +88,6 @@ public class MainActivityFragment extends Fragment {
         private static final String VOTE_VALUE = "100";
         // JSON field names
         private static final String RESULTS = "results";
-        private static final String MOVIE_ID = "id";
-        private static final String POSTER_PATH = "poster_path";
 
         private List<Movie> parseResponse(String response) throws JSONException {
             List<Movie> popularMovies = new ArrayList<>();
@@ -96,9 +95,7 @@ public class MainActivityFragment extends Fragment {
             if (response != null) {
                 JSONArray jsonResponse = new JSONObject(response).getJSONArray(RESULTS);
                 for (int i = 0; i < jsonResponse.length(); i++) {
-                    Movie movie = new Movie(jsonResponse.getJSONObject(i).getString(MOVIE_ID));
-                    movie.setPosterPath(jsonResponse.getJSONObject(i).getString(POSTER_PATH),
-                            Movie.DEFAULT_SIZE);
+                    Movie movie = new Movie(jsonResponse.getJSONObject(i));
                     popularMovies.add(movie);
                 }
             }
