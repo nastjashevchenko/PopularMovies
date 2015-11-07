@@ -2,4 +2,5 @@
 <resources>
     <color name="header_background">#11C2BF</color>
     <color name="header_text">#F9F3F3</color>
+    <color name="poster_placeholder">#A6F7F6</color>
 </resources>

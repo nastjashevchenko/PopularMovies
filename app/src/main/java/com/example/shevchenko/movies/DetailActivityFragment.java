@@ -41,7 +41,9 @@ public class DetailActivityFragment extends Fragment {
         mPlot.setText(mMovie.getOverview());
         mRating.setText(getResources().getString(R.string.rating,
                 mMovie.getVoteAverage()));
-        Picasso.with(getActivity()).load(mMovie.getPosterPath())
+        Picasso.with(getActivity())
+                .load(mMovie.getPosterPath())
+                .placeholder(R.drawable.placeholder)
                 .into(mPoster);
 
         return rootView;
