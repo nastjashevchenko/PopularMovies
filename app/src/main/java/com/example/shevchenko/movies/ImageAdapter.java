@@ -40,10 +40,10 @@ class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
+            Picasso.with(mContext).load(getItemUrl(position)).into(imageView);
         } else {
             imageView = (ImageView) convertView;
         }
-        Picasso.with(mContext).load(getItemUrl(position)).into(imageView);
         return imageView;
     }
 }
