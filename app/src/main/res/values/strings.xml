@@ -16,4 +16,5 @@
 
     <!-- User messages -->
     <string name="no_connection_alert">Sorry, no Movies without Internet</string>
+    <string name="cant_load_movies">Sorry, we can not load movies</string>
 </resources>

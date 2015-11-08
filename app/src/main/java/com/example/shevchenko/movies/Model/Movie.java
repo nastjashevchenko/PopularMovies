@@ -1,19 +1,12 @@
-package com.example.shevchenko.movies;
+package com.example.shevchenko.movies.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
- /**
+/**
  * Class for Movie object, store necessary information about Movie
  */
-class Movie implements Parcelable {
+public class Movie implements Parcelable {
     private final String id;
     private String title;
     private String releaseDate;
@@ -23,41 +16,19 @@ class Movie implements Parcelable {
 
     private static final String BASE_PATH = "http://image.tmdb.org/t/p/";
     public static final String DEFAULT_SIZE = "w500";
+    public static final String DETAILS_SIZE = "w342";
     public static final String EXTRA_NAME = "movie_details";
 
     public Movie(String id) {
         this.id = id;
     }
 
-     /**
-      * Static method to get all necessary Movie fields from JSON response for this movie
-      * from MovieDB API.
-      */
-    public static Movie parseFromJson(JSONObject movieJson) throws JSONException {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
-        Gson gson = gsonBuilder.create();
-
-        Movie movie = gson.fromJson(movieJson.toString(), Movie.class);
-        movie.setPosterPath(movie.posterPath, DEFAULT_SIZE);
-        return movie;
-    }
-
     public String getId() {
         return id;
     }
 
-     /**
-      * Method to set full URL to poster image.
-      * Full URL consists from 3 parts: main (base) URL, image size and
-      * relative path, which can be got from JSON response
-      */
-    public void setPosterPath(String relativePath, String size) {
-        this.posterPath = BASE_PATH + size + relativePath;
-    }
-
-    public String getPosterPath() {
-        return posterPath;
+    public String getPosterPath(String size) {
+        return BASE_PATH + size + posterPath;
     }
 
     public String getTitle() {

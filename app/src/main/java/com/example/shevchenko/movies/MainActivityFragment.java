@@ -1,8 +1,6 @@
 package com.example.shevchenko.movies;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -15,36 +13,66 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.shevchenko.movies.Model.Movie;
+import com.example.shevchenko.movies.Rest.ApiResponse.MoviesListApiResponse;
+import com.example.shevchenko.movies.Rest.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-    // Don't really think that there is sence in binding when there is only one view
+    // Don't really think that there is sense in binding when there is only one view
     // Keeping it for consistency with DetailActivityFragment
     @Bind(R.id.movies_grid) GridView mGridView;
     private List<Movie> mMoviesList;
+    private static final String VOTE_VALUE = "100";
 
     public MainActivityFragment() {
     }
 
     private void createMoviesList(){
         if (InternetUtil.checkConnection(getContext())) {
-            GetMoviesInfoTask getMovies = new GetMoviesInfoTask();
             String sorting = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
                     getString(R.string.pref_sorting_key), getString(R.string.pref_sorting_default));
-            getMovies.execute(sorting);
+            Call<MoviesListApiResponse> call = RestClient.getService().getMovies(sorting,
+                    VOTE_VALUE, ApiKey.getApiKey());
+            call.enqueue(new Callback<MoviesListApiResponse>() {
+                @Override
+                public void onResponse(Response<MoviesListApiResponse> response, Retrofit retrofit) {
+                    MoviesListApiResponse moviesListResponse = response.body();
+                    List<Movie> movies = moviesListResponse.movies;
+                    if (movies != null){
+                        List<String> imageUrls = new ArrayList<>();
+                        for (Movie movie : movies) {
+                            imageUrls.add(movie.getPosterPath(Movie.DEFAULT_SIZE));
+                        }
+                        ImageAdapter imageAdapter = new ImageAdapter(getActivity(), imageUrls);
+                        mGridView.setAdapter(imageAdapter);
+                        mMoviesList = movies;
+                    }
+                }
+                @Override
+                public void onFailure(Throwable t) {
+                    Toast toast = Toast.makeText(getContext(), R.string.cant_load_movies,
+                            Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }
+            });
         } else {
+            // TODO: do I need this after setting up retrofit callback?
             // TODO: show alert message in Fragment, not Toast
+            // TODO: if get back from detail view, do not show message
             Toast toast = Toast.makeText(getContext(), R.string.no_connection_alert,
                     Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
@@ -82,58 +110,5 @@ public class MainActivityFragment extends Fragment {
             }
         });
         return view;
-    }
-
-    private class GetMoviesInfoTask extends AsyncTask<String, Void, List<Movie>> {
-        private static final String LOG_TAG = "Movies, GetMoviesInfo";
-        private static final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
-        private static final String SORT_PARAM = "sort_by";
-        private static final String VOTE_COUNT = "vote_count.gte";
-        private static final String VOTE_VALUE = "100";
-        // JSON field names
-        private static final String RESULTS = "results";
-
-        private List<Movie> parseResponse(String response) throws JSONException {
-            List<Movie> popularMovies = new ArrayList<>();
-            // If connectivity check is successful, but response in empty
-            if (response != null) {
-                JSONArray jsonResponse = new JSONObject(response).getJSONArray(RESULTS);
-                for (int i = 0; i < jsonResponse.length(); i++) {
-                    Movie movie = Movie.parseFromJson(jsonResponse.getJSONObject(i));
-                    popularMovies.add(movie);
-                }
-            }
-            return popularMovies;
-        }
-
-        @Override
-        protected List<Movie> doInBackground(String... params) {
-            String sort_type = params[0];
-            Uri builder = Uri.parse(BASE_URL).buildUpon()
-                    .appendQueryParameter(SORT_PARAM, sort_type)
-                    // Return only movies with more than VOTE_VALUE number of votes
-                    // Otherwise, movie with the highest rating can be one with 10/10 rating and 1 vote
-                    .appendQueryParameter(VOTE_COUNT, VOTE_VALUE)
-                    .build();
-            try {
-                return parseResponse(InternetUtil.getJsonResponseAsString(builder, LOG_TAG));
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            if (movies != null){
-                List<String> imageUrls = new ArrayList<>();
-                for (Movie movie : movies) {
-                    imageUrls.add(movie.getPosterPath());
-                }
-                ImageAdapter imageAdapter = new ImageAdapter(getActivity(), imageUrls);
-                mGridView.setAdapter(imageAdapter);
-                mMoviesList = movies;
-            }
-        }
     }
 }
