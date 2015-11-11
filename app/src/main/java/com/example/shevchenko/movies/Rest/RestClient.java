@@ -9,24 +9,20 @@ import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
 public class RestClient {
-    // TODO Singletones
-    public static final String BASE_URL = "http://api.themoviedb.org/3/";
-    public ApiInterface service;
+    private static final String BASE_URL = "http://api.themoviedb.org/3/";
 
-    public static Retrofit getRetrofit() {
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create();
+    private static final Gson GSON = new GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .create();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
+    private static final Retrofit RETROFIT = new Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(GSON))
+            .build();
 
-        return retrofit;
-    }
+    private static final ApiInterface MOVIE_API_SERVICE = RETROFIT.create(ApiInterface.class);
 
     public static ApiInterface getService() {
-        return getRetrofit().create(ApiInterface.class);
+        return MOVIE_API_SERVICE;
     }
 }
