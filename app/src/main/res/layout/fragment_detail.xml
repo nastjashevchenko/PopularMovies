@@ -46,20 +46,18 @@
             android:layout_toRightOf="@+id/poster"
             android:layout_toEndOf="@+id/poster" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/trailer"
-            android:layout_below="@+id/release"
-            android:layout_toRightOf="@+id/poster"
-            android:layout_toEndOf="@+id/poster" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/plot"
             android:layout_below="@+id/poster"
             android:layout_centerHorizontal="true" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/trailers"
+            android:layout_below="@+id/plot" />
 
 </RelativeLayout>
 </ScrollView>

@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.shevchenko.movies.Adapters.ImageAdapter;
 import com.example.shevchenko.movies.Model.Movie;
 import com.example.shevchenko.movies.Rest.ApiResponse.MoviesListApiResponse;
 import com.example.shevchenko.movies.Rest.RestClient;
