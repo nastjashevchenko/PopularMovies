@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,6 +36,7 @@ import retrofit.Retrofit;
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
+    // TODO Delete border
     @Bind(R.id.title) TextView mTitle;
     @Bind(R.id.rating) TextView mRating;
     @Bind(R.id.release) TextView mReleaseDate;
@@ -49,17 +48,17 @@ public class DetailActivityFragment extends Fragment {
     // This function was taken from Stackoverflow answers as ready solution on how to put
     // ListView inside ScrollView and make it look good
     public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
+        ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();
         if (listAdapter == null)
             return;
 
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
         int totalHeight = 0;
         View view = null;
         for (int i = 0; i < listAdapter.getCount(); i++) {
             view = listAdapter.getView(i, view, listView);
             if (i == 0)
-                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ListView.LayoutParams.WRAP_CONTENT));
 
             view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
             totalHeight += view.getMeasuredHeight();
