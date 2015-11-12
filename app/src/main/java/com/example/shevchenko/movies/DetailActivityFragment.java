@@ -77,8 +77,9 @@ public class DetailActivityFragment extends Fragment {
             @Override
             public void onResponse(Response<VideoApiResponse> response, Retrofit retrofit) {
                 VideoApiResponse videos = response.body();
-                final List<Video> trailers = videos.videos;
-                if (trailers != null) {
+
+                if (videos != null) {
+                    final List<Video> trailers = videos.videos;
                     mTrailerList.setAdapter(new TrailerAdapter(getContext(), trailers));
                     setListViewHeightBasedOnChildren(mTrailerList);
 
@@ -137,7 +138,6 @@ public class DetailActivityFragment extends Fragment {
         mRating.setText(getResources().getString(R.string.rating,
                 mMovie.getVoteAverage()));
 
-        // TODO Fix crash if can't recieve trailers list
         getTrailers(mMovie);
         getReviews(mMovie);
 
