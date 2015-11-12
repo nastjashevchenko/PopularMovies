@@ -51,8 +51,9 @@ public class MainActivityFragment extends Fragment {
                 @Override
                 public void onResponse(Response<MoviesListApiResponse> response, Retrofit retrofit) {
                     MoviesListApiResponse moviesListResponse = response.body();
-                    List<Movie> movies = moviesListResponse.movies;
-                    if (movies != null){
+
+                    if (moviesListResponse != null){
+                        List<Movie> movies = moviesListResponse.movies;
                         List<String> imageUrls = new ArrayList<>();
                         for (Movie movie : movies) {
                             imageUrls.add(movie.getPosterPath(Movie.DEFAULT_SIZE));

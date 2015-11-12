@@ -7,11 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.shevchenko.movies.Adapters.ReviewAdapter;
 import com.example.shevchenko.movies.Adapters.TrailerAdapter;
 import com.example.shevchenko.movies.Model.Movie;
 import com.example.shevchenko.movies.Model.Review;
@@ -21,7 +22,6 @@ import com.example.shevchenko.movies.Rest.ApiResponse.VideoApiResponse;
 import com.example.shevchenko.movies.Rest.RestClient;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -36,7 +36,6 @@ import retrofit.Retrofit;
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
-    // TODO Delete border
     @Bind(R.id.title) TextView mTitle;
     @Bind(R.id.rating) TextView mRating;
     @Bind(R.id.release) TextView mReleaseDate;
@@ -48,7 +47,7 @@ public class DetailActivityFragment extends Fragment {
     // This function was taken from Stackoverflow answers as ready solution on how to put
     // ListView inside ScrollView and make it look good
     public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();
+        ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null)
             return;
 
@@ -106,14 +105,10 @@ public class DetailActivityFragment extends Fragment {
         call.enqueue(new Callback<ReviewApiResponse>() {
             @Override
             public void onResponse(Response<ReviewApiResponse> response, Retrofit retrofit) {
-                final List<Review> reviews = response.body().reviews;
-                List<String> reviewsBody = new ArrayList<>();
-                for (Review r: reviews) {
-                    reviewsBody.add(r.getAuthor());
-                }
-                // TODO Work on UI for Reviews
-                if (reviews != null) {
-                    mReviews.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, reviewsBody));
+                ReviewApiResponse reviewResponse = response.body();
+                if (reviewResponse != null) {
+                    final List<Review> reviews = reviewResponse.reviews;
+                    mReviews.setAdapter(new ReviewAdapter(getContext(), reviews));
                     setListViewHeightBasedOnChildren(mReviews);
                 }
             }
@@ -136,11 +131,13 @@ public class DetailActivityFragment extends Fragment {
         mTitle.setText(mMovie.getTitle());
         mReleaseDate.setText(getResources().getString(R.string.release_date,
                 mMovie.getReleaseDate()));
+
         // TODO Idea - show 3-5 lines and make it expandable
         mPlot.setText(mMovie.getOverview());
         mRating.setText(getResources().getString(R.string.rating,
                 mMovie.getVoteAverage()));
 
+        // TODO Fix crash if can't recieve trailers list
         getTrailers(mMovie);
         getReviews(mMovie);
 

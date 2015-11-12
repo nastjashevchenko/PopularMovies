@@ -2,8 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context="com.example.shevchenko.movies.DetailActivityFragment"
     android:orientation="vertical">
 
@@ -71,7 +69,8 @@
                 android:layout_marginTop="@dimen/title_margin_bottom"
                 android:divider="@android:color/transparent"
                 android:id="@+id/trailers"
-                android:layout_below="@+id/plot" />
+                android:layout_below="@+id/plot"
+                tools:ignore="NestedScrolling" />
 
             <ListView
                 android:layout_width="match_parent"
@@ -79,7 +78,8 @@
                 android:layout_marginTop="@dimen/title_margin_bottom"
                 android:divider="@android:color/transparent"
                 android:id="@+id/reviews"
-                android:layout_below="@+id/trailers" />
+                android:layout_below="@+id/trailers"
+                tools:ignore="NestedScrolling" />
 
     </RelativeLayout>
     </ScrollView>
