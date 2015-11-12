@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -15,11 +16,14 @@ import android.widget.TextView;
 
 import com.example.shevchenko.movies.Adapters.TrailerAdapter;
 import com.example.shevchenko.movies.Model.Movie;
+import com.example.shevchenko.movies.Model.Review;
 import com.example.shevchenko.movies.Model.Video;
+import com.example.shevchenko.movies.Rest.ApiResponse.ReviewApiResponse;
 import com.example.shevchenko.movies.Rest.ApiResponse.VideoApiResponse;
 import com.example.shevchenko.movies.Rest.RestClient;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -40,6 +44,7 @@ public class DetailActivityFragment extends Fragment {
     @Bind(R.id.plot) TextView mPlot;
     @Bind(R.id.poster) ImageView mPoster;
     @Bind(R.id.trailers) ListView mTrailerList;
+    @Bind(R.id.reviews) ListView mReviews;
 
     // This function was taken from Stackoverflow answers as ready solution on how to put
     // ListView inside ScrollView and make it look good
@@ -67,22 +72,8 @@ public class DetailActivityFragment extends Fragment {
     public DetailActivityFragment() {
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        ButterKnife.bind(this, rootView);
-
-        Movie mMovie = getActivity().getIntent().getParcelableExtra(Movie.EXTRA_NAME);
-
-        mTitle.setText(mMovie.getTitle());
-        mReleaseDate.setText(getResources().getString(R.string.release_date,
-                mMovie.getReleaseDate()));
-        mPlot.setText(mMovie.getOverview());
-        mRating.setText(getResources().getString(R.string.rating,
-                mMovie.getVoteAverage()));
-
-        Call<VideoApiResponse> call = RestClient.getService().getVideos(mMovie.getId(),ApiKey.getApiKey());
+    private void getTrailers(Movie movie) {
+        Call<VideoApiResponse> call = RestClient.getService().getVideos(movie.getId(),ApiKey.getApiKey());
 
         call.enqueue(new Callback<VideoApiResponse>() {
             @Override
@@ -108,6 +99,51 @@ public class DetailActivityFragment extends Fragment {
                 // TODO
             }
         });
+    }
+
+    private void getReviews(Movie movie) {
+        Call<ReviewApiResponse> call = RestClient.getService().getReviews(movie.getId(), ApiKey.getApiKey());
+
+        call.enqueue(new Callback<ReviewApiResponse>() {
+            @Override
+            public void onResponse(Response<ReviewApiResponse> response, Retrofit retrofit) {
+                final List<Review> reviews = response.body().reviews;
+                List<String> reviewsBody = new ArrayList<>();
+                for (Review r: reviews) {
+                    reviewsBody.add(r.getAuthor());
+                }
+                // TODO Work on UI for Reviews
+                if (reviews != null) {
+                    mReviews.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, reviewsBody));
+                    setListViewHeightBasedOnChildren(mReviews);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                // TODO
+            }
+        });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        ButterKnife.bind(this, rootView);
+
+        Movie mMovie = getActivity().getIntent().getParcelableExtra(Movie.EXTRA_NAME);
+
+        mTitle.setText(mMovie.getTitle());
+        mReleaseDate.setText(getResources().getString(R.string.release_date,
+                mMovie.getReleaseDate()));
+        // TODO Idea - show 3-5 lines and make it expandable
+        mPlot.setText(mMovie.getOverview());
+        mRating.setText(getResources().getString(R.string.rating,
+                mMovie.getVoteAverage()));
+
+        getTrailers(mMovie);
+        getReviews(mMovie);
 
         Picasso.with(getActivity())
                 .load(mMovie.getPosterPath(Movie.DEFAULT_SIZE))

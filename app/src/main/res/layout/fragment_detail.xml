@@ -59,5 +59,11 @@
             android:id="@+id/trailers"
             android:layout_below="@+id/plot" />
 
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reviews"
+            android:layout_below="@+id/trailers" />
+
 </RelativeLayout>
 </ScrollView>

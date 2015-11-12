@@ -2,6 +2,7 @@ package com.example.shevchenko.movies.Rest;
 
 
 import com.example.shevchenko.movies.Rest.ApiResponse.MoviesListApiResponse;
+import com.example.shevchenko.movies.Rest.ApiResponse.ReviewApiResponse;
 import com.example.shevchenko.movies.Rest.ApiResponse.VideoApiResponse;
 
 import retrofit.Call;
@@ -21,6 +22,11 @@ public interface ApiInterface {
 
     @GET("movie/{id}/videos")
     Call<VideoApiResponse> getVideos(
+            @Path("id") String id,
+            @Query("api_key") String api_key);
+
+    @GET("movie/{id}/reviews")
+    Call<ReviewApiResponse> getReviews(
             @Path("id") String id,
             @Query("api_key") String api_key);
 }
