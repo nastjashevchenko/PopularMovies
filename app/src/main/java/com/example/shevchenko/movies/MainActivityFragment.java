@@ -51,7 +51,7 @@ public class MainActivityFragment extends Fragment {
                 @Override
                 public void onResponse(Response<MoviesListApiResponse> response, Retrofit retrofit) {
                     MoviesListApiResponse moviesListResponse = response.body();
-
+                    // TODO if response is null, but internet connection true and response was successful
                     if (moviesListResponse != null){
                         List<Movie> movies = moviesListResponse.movies;
                         List<String> imageUrls = new ArrayList<>();

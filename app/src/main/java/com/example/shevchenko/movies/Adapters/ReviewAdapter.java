@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.shevchenko.movies.Model.Video;
+import com.example.shevchenko.movies.Model.Review;
 import com.example.shevchenko.movies.R;
 
 import java.util.List;
@@ -15,25 +15,26 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class TrailerAdapter extends BaseAdapter {
+public class ReviewAdapter extends BaseAdapter {
     private final Context mContext;
-    private final List<Video> mTrailers;
+    private final List<Review> mReviews;
 
-    @Bind(R.id.trailer_name) TextView mTrailerName;
+    @Bind(R.id.author) TextView mAuthor;
+    @Bind(R.id.review_text) TextView mText;
 
-    public TrailerAdapter(Context mContext, List<Video> mTrailers) {
+    public ReviewAdapter(Context mContext, List<Review> reviews) {
         this.mContext = mContext;
-        this.mTrailers = mTrailers;
+        this.mReviews = reviews;
     }
 
     @Override
     public int getCount() {
-        return mTrailers.size();
+        return mReviews.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mTrailers.get(position);
+        return mReviews.get(position);
     }
 
     @Override
@@ -43,13 +44,14 @@ public class TrailerAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Video trailer = (Video) getItem(position);
+        Review review = (Review) getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.trailer_view, parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.review_view, parent, false);
         }
 
         ButterKnife.bind(this, convertView);
-        mTrailerName.setText(trailer.getName());
+        mAuthor.setText(review.getAuthor());
+        mText.setText(review.getContent());
         return convertView;
     }
 }
