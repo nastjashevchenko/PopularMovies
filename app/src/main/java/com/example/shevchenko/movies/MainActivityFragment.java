@@ -13,10 +13,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.shevchenko.movies.Adapters.ImageAdapter;
-import com.example.shevchenko.movies.Model.Movie;
-import com.example.shevchenko.movies.Rest.ApiResponse.MoviesListApiResponse;
-import com.example.shevchenko.movies.Rest.RestClient;
+import com.example.shevchenko.movies.adapters.ImageAdapter;
+import com.example.shevchenko.movies.model.Movie;
+import com.example.shevchenko.movies.rest.ApiResponse.MoviesListApiResponse;
+import com.example.shevchenko.movies.rest.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;

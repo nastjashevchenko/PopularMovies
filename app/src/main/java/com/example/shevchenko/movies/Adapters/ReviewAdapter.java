@@ -1,4 +1,4 @@
-package com.example.shevchenko.movies.Adapters;
+package com.example.shevchenko.movies.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.shevchenko.movies.Model.Review;
+import com.example.shevchenko.movies.model.Review;
 import com.example.shevchenko.movies.R;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class ReviewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, final ViewGroup parent) {
         Review review = (Review) getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.review_view, parent, false);
@@ -51,6 +51,7 @@ public class ReviewAdapter extends BaseAdapter {
 
         ButterKnife.bind(this, convertView);
         mAuthor.setText(review.getAuthor());
+        // TODO make reviews collapsable-expandable
         mText.setText(review.getContent());
         return convertView;
     }

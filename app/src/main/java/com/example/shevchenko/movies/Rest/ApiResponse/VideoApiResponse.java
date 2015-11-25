@@ -1,6 +1,6 @@
-package com.example.shevchenko.movies.Rest.ApiResponse;
+package com.example.shevchenko.movies.rest.ApiResponse;
 
-import com.example.shevchenko.movies.Model.Video;
+import com.example.shevchenko.movies.model.Video;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;

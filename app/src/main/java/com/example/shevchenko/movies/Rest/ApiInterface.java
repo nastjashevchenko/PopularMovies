@@ -1,9 +1,9 @@
-package com.example.shevchenko.movies.Rest;
+package com.example.shevchenko.movies.rest;
 
 
-import com.example.shevchenko.movies.Rest.ApiResponse.MoviesListApiResponse;
-import com.example.shevchenko.movies.Rest.ApiResponse.ReviewApiResponse;
-import com.example.shevchenko.movies.Rest.ApiResponse.VideoApiResponse;
+import com.example.shevchenko.movies.rest.ApiResponse.MoviesListApiResponse;
+import com.example.shevchenko.movies.rest.ApiResponse.ReviewApiResponse;
+import com.example.shevchenko.movies.rest.ApiResponse.VideoApiResponse;
 
 import retrofit.Call;
 import retrofit.http.GET;

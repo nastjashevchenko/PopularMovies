@@ -1,5 +1,6 @@
 package com.example.shevchenko.movies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,19 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.shevchenko.movies.Adapters.ReviewAdapter;
-import com.example.shevchenko.movies.Adapters.TrailerAdapter;
-import com.example.shevchenko.movies.Model.Movie;
-import com.example.shevchenko.movies.Model.Review;
-import com.example.shevchenko.movies.Model.Video;
-import com.example.shevchenko.movies.Rest.ApiResponse.ReviewApiResponse;
-import com.example.shevchenko.movies.Rest.ApiResponse.VideoApiResponse;
-import com.example.shevchenko.movies.Rest.RestClient;
+import com.example.shevchenko.movies.adapters.ReviewAdapter;
+import com.example.shevchenko.movies.adapters.TrailerAdapter;
+import com.example.shevchenko.movies.model.Movie;
+import com.example.shevchenko.movies.model.Review;
+import com.example.shevchenko.movies.model.Video;
+import com.example.shevchenko.movies.rest.ApiResponse.ReviewApiResponse;
+import com.example.shevchenko.movies.rest.ApiResponse.VideoApiResponse;
+import com.example.shevchenko.movies.rest.RestClient;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -43,6 +45,9 @@ public class DetailActivityFragment extends Fragment {
     @Bind(R.id.poster) ImageView mPoster;
     @Bind(R.id.trailers) ListView mTrailerList;
     @Bind(R.id.reviews) ListView mReviews;
+    @Bind(R.id.favorite) Button mLike;
+    Movie mMovie;
+    Context mContext;
 
     // This function was taken from Stackoverflow answers as ready solution on how to put
     // ListView inside ScrollView and make it look good
@@ -71,7 +76,7 @@ public class DetailActivityFragment extends Fragment {
     }
 
     private void getTrailers(Movie movie) {
-        Call<VideoApiResponse> call = RestClient.getService().getVideos(movie.getId(),ApiKey.getApiKey());
+        Call<VideoApiResponse> call = RestClient.getService().getVideos(movie.getId(), ApiKey.getApiKey());
 
         call.enqueue(new Callback<VideoApiResponse>() {
             @Override
@@ -127,7 +132,8 @@ public class DetailActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, rootView);
 
-        Movie mMovie = getActivity().getIntent().getParcelableExtra(Movie.EXTRA_NAME);
+        mContext = getContext();
+        mMovie = getActivity().getIntent().getParcelableExtra(Movie.EXTRA_NAME);
 
         mTitle.setText(mMovie.getTitle());
         mReleaseDate.setText(getResources().getString(R.string.release_date,
@@ -137,8 +143,24 @@ public class DetailActivityFragment extends Fragment {
         mPlot.setText(mMovie.getOverview());
         mRating.setText(getResources().getString(R.string.rating,
                 mMovie.getVoteAverage()));
+        //TODO Change to icons
+        mLike.setText(mMovie.isFavorite(mContext) ? "Unlike" : "Like");
+
+        mLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMovie.isFavorite(mContext)) {
+                    mMovie.deleteFavorite(mContext);
+                    mLike.setText("Like");
+                } else {
+                    mMovie.addFavorite(mContext);
+                    mLike.setText("Unlike");
+                }
+            }
+        });
 
         getTrailers(mMovie);
+        // TODO Reviews block title
         getReviews(mMovie);
 
         Picasso.with(getActivity())

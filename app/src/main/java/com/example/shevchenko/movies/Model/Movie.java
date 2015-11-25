@@ -1,7 +1,12 @@
-package com.example.shevchenko.movies.Model;
+package com.example.shevchenko.movies.model;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.example.shevchenko.movies.data.MovieContract;
 
 /**
  * Class for Movie object, store necessary information about Movie
@@ -45,6 +50,38 @@ public class Movie implements Parcelable {
 
     public String getOverview() {
         return overview;
+    }
+
+    public boolean isFavorite(Context c) {
+        Cursor cursor = c.getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                new String[]{MovieContract.MovieEntry.COLUMN_TITLE},
+                MovieContract.MovieEntry.COLUMN_ID + " = ?",
+                new String[]{id},
+                null
+        );
+        return (cursor != null && cursor.getCount() > 0);
+    }
+
+    public void deleteFavorite(Context c) {
+        c.getContentResolver().delete(
+                MovieContract.MovieEntry.CONTENT_URI,
+                MovieContract.MovieEntry.COLUMN_ID + " = ?",
+                new String[]{id});
+    }
+
+    public void addFavorite(Context c) {
+        ContentValues movieValues = new ContentValues();
+        movieValues.put(MovieContract.MovieEntry.COLUMN_ID, id);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE, releaseDate);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_RATING, voteAverage);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, overview);
+        movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, getPosterPath(DETAILS_SIZE));
+
+        c.getContentResolver().insert(
+                MovieContract.MovieEntry.CONTENT_URI,
+                movieValues);
     }
 
      @Override

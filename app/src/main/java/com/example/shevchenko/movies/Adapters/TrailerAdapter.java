@@ -1,4 +1,4 @@
-package com.example.shevchenko.movies.Adapters;
+package com.example.shevchenko.movies.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.shevchenko.movies.Model.Video;
+import com.example.shevchenko.movies.model.Video;
 import com.example.shevchenko.movies.R;
 
 import java.util.List;

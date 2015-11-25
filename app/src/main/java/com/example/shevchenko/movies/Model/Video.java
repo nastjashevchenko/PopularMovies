@@ -1,4 +1,4 @@
-package com.example.shevchenko.movies.Model;
+package com.example.shevchenko.movies.model;
 
 import android.net.Uri;
 

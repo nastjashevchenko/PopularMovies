@@ -1,4 +1,4 @@
-package com.example.shevchenko.movies.Rest;
+package com.example.shevchenko.movies.rest;
 
 
 import com.google.gson.FieldNamingPolicy;

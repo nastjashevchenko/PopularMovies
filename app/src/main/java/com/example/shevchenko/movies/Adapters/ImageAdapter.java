@@ -1,4 +1,4 @@
-package com.example.shevchenko.movies.Adapters;
+package com.example.shevchenko.movies.adapters;
 
 import android.content.Context;
 import android.view.View;
