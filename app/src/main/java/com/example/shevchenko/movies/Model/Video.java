@@ -16,7 +16,8 @@ public class Video {
     private static final String YOUTUBE_URL = "http://youtube.com/watch";
     private static final String YOUTUBE_KEY = "v";
 
-    // TODO Map of URLs from other sites, what options except Youtube can be?
+    // Didn't find any other sources except Youtube
+    // If there are any, need to check source and create mapping for source and URI builder
     public Uri getUri() {
         return Uri.parse(YOUTUBE_URL).buildUpon()
                 .appendQueryParameter(YOUTUBE_KEY, key)

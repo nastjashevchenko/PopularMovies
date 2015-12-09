@@ -52,6 +52,15 @@ public class Movie implements Parcelable {
         return overview;
     }
 
+    public Movie(Cursor cursor) {
+        this.id = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_ID));
+        this.title = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+        this.releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE));
+        this.voteAverage = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING));
+        this.overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW));
+        this.posterPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH));
+    }
+
     public boolean isFavorite(Context c) {
         Cursor cursor = c.getContentResolver().query(
                 MovieContract.MovieEntry.CONTENT_URI,
@@ -77,7 +86,7 @@ public class Movie implements Parcelable {
         movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE, releaseDate);
         movieValues.put(MovieContract.MovieEntry.COLUMN_RATING, voteAverage);
         movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, overview);
-        movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, getPosterPath(DETAILS_SIZE));
+        movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, getPosterPath(DEFAULT_SIZE));
 
         c.getContentResolver().insert(
                 MovieContract.MovieEntry.CONTENT_URI,

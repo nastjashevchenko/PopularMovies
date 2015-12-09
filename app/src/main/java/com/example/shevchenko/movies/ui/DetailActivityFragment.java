@@ -1,4 +1,4 @@
-package com.example.shevchenko.movies;
+package com.example.shevchenko.movies.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.shevchenko.movies.ApiKey;
+import com.example.shevchenko.movies.R;
 import com.example.shevchenko.movies.adapters.ReviewAdapter;
 import com.example.shevchenko.movies.adapters.TrailerAdapter;
 import com.example.shevchenko.movies.model.Movie;
@@ -38,14 +40,22 @@ import retrofit.Retrofit;
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
-    @Bind(R.id.title) TextView mTitle;
-    @Bind(R.id.rating) TextView mRating;
-    @Bind(R.id.release) TextView mReleaseDate;
-    @Bind(R.id.plot) TextView mPlot;
-    @Bind(R.id.poster) ImageView mPoster;
-    @Bind(R.id.trailers) ListView mTrailerList;
-    @Bind(R.id.reviews) ListView mReviews;
-    @Bind(R.id.favorite) Button mLike;
+    @Bind(R.id.title)
+    TextView mTitle;
+    @Bind(R.id.rating)
+    TextView mRating;
+    @Bind(R.id.release)
+    TextView mReleaseDate;
+    @Bind(R.id.plot)
+    TextView mPlot;
+    @Bind(R.id.poster)
+    ImageView mPoster;
+    @Bind(R.id.trailers)
+    ListView mTrailerList;
+    @Bind(R.id.reviews)
+    ListView mReviews;
+    @Bind(R.id.favorite)
+    Button mLike;
     Movie mMovie;
     Context mContext;
 
@@ -127,6 +137,11 @@ public class DetailActivityFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
@@ -160,7 +175,7 @@ public class DetailActivityFragment extends Fragment {
         });
 
         getTrailers(mMovie);
-        // TODO Reviews block title
+        // TODO Add reviews block title if any reviews present
         getReviews(mMovie);
 
         Picasso.with(getActivity())

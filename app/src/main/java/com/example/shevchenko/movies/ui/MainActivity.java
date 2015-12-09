@@ -1,4 +1,4 @@
-package com.example.shevchenko.movies;
+package com.example.shevchenko.movies.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.shevchenko.movies.R;
 
 
 public class MainActivity extends AppCompatActivity {

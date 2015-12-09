@@ -1,8 +1,10 @@
-package com.example.shevchenko.movies;
+package com.example.shevchenko.movies.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.example.shevchenko.movies.R;
 
 
 public class DetailActivity extends AppCompatActivity {

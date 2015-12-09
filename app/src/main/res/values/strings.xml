@@ -4,8 +4,9 @@
 
     <!-- Preferences related strings -->
     <string name="pref_sorting_key">pref_sorting</string>
-    <string name="pref_sorting_title">Sort movies by</string>
+    <string name="pref_sorting_title">Show movies </string>
     <string name="pref_sorting_default">popularity.desc</string>
+    <string name="favourite">favourite</string>
     <string name="title_pref_activity">Settings</string>
 
     <!-- Movie Details Activity related strings -->

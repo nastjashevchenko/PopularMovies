@@ -1,10 +1,12 @@
-package com.example.shevchenko.movies;
+package com.example.shevchenko.movies.ui;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+
+import com.example.shevchenko.movies.R;
 
 public class PrefActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener{

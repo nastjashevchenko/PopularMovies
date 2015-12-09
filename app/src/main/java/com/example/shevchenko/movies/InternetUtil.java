@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 /**
  * Class with help functions for internet requests
  */
-class InternetUtil {
+public class InternetUtil {
 
     public static boolean checkConnection(Context context) {
         ConnectivityManager cm =
