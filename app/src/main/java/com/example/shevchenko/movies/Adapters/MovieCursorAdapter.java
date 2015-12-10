@@ -24,6 +24,10 @@ public class MovieCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ImageView image = (ImageView) view;
+        // I am using Picasso and URL to show posters for fav movies, which will work offline only
+        // if image is in cache and will show placeholder otherwise.
+        // Ideally, when adding movie to favs, I should download image to disk and save path to it
+        // in DB, then load poster from device storage.
         Picasso.with(mContext)
                 .load(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)))
                 .placeholder(R.drawable.placeholder)

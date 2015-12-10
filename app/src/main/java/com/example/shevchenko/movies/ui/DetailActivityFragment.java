@@ -4,7 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -54,10 +59,11 @@ public class DetailActivityFragment extends Fragment {
     ListView mTrailerList;
     @Bind(R.id.reviews)
     ListView mReviews;
-    @Bind(R.id.favorite)
-    Button mLike;
+    @Bind(R.id.favorite) Button mLike;
+    List<Video> trailers;
     Movie mMovie;
     Context mContext;
+    ShareActionProvider mShareActionProvider;
 
     // This function was taken from Stackoverflow answers as ready solution on how to put
     // ListView inside ScrollView and make it look good
@@ -94,7 +100,9 @@ public class DetailActivityFragment extends Fragment {
                 VideoApiResponse videos = response.body();
 
                 if (videos != null) {
-                    final List<Video> trailers = videos.videos;
+                    trailers = videos.videos;
+                    // When we get trailers list, we should update share intent to add trailer's URL
+                    setShareIntent();
                     mTrailerList.setAdapter(new TrailerAdapter(getContext(), trailers));
                     setListViewHeightBasedOnChildren(mTrailerList);
 
@@ -136,9 +144,34 @@ public class DetailActivityFragment extends Fragment {
         });
     }
 
+    private void setShareIntent() {
+        Intent myShareIntent = new Intent();
+        myShareIntent.setAction(Intent.ACTION_SEND);
+        String shareText = mMovie.getTitle();
+        if (trailers != null && trailers.size() > 0) {
+            shareText = shareText + " " + trailers.get(0).getUri().toString();
+        }
+        // TODO Only messaging works now as separate icon
+        myShareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        myShareIntent.setType("text/*");
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(myShareIntent);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_detail, menu);
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        setShareIntent();
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
