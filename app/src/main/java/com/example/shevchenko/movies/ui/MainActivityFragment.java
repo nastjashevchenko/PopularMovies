@@ -1,8 +1,10 @@
 package com.example.shevchenko.movies.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -46,8 +48,8 @@ public class MainActivityFragment extends Fragment {
     @Bind(R.id.movies_grid) GridView mGridView;
     private List<Movie> mMoviesList = new ArrayList<>();
     private MovieCursorAdapter favAdapter;
-    private String sorting;
-    private boolean favourite = false; //by default sorting is by popularity
+    private ImageAdapter imageAdapter;
+    private boolean favourite;
     private static final String VOTE_VALUE = "100";
 
     public MainActivityFragment() {
@@ -59,44 +61,40 @@ public class MainActivityFragment extends Fragment {
         favourite = (sorting.equals(getString(R.string.favourite)));
         return sorting;
     }
+
+    private void showErrorMessage(Context c) {
+        Toast toast = Toast.makeText(getActivity(), R.string.cant_load_movies, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+
     private void createOnlineMoviesList(String sorting){
-        if (InternetUtil.checkConnection(getContext())) {
-            Call<MoviesListApiResponse> call = RestClient.getService().getMovies(sorting,
-                    VOTE_VALUE, ApiKey.getApiKey());
-            call.enqueue(new Callback<MoviesListApiResponse>() {
-                @Override
-                public void onResponse(Response<MoviesListApiResponse> response, Retrofit retrofit) {
-                    MoviesListApiResponse moviesListResponse = response.body();
-                    // TODO if response is null, but internet connection true and response was successful
-                    if (moviesListResponse != null){
-                        List<Movie> movies = moviesListResponse.movies;
-                        List<String> imageUrls = new ArrayList<>();
-                        for (Movie movie : movies) {
-                            imageUrls.add(movie.getPosterPath(Movie.DEFAULT_SIZE));
-                        }
-                        ImageAdapter imageAdapter = new ImageAdapter(getActivity(), imageUrls);
-                        mGridView.setAdapter(imageAdapter);
-                        mMoviesList = movies;
-                    }
-                }
-                @Override
-                public void onFailure(Throwable t) {
-                    // TODO test with no connection
-                    Toast toast = Toast.makeText(getContext(), R.string.cant_load_movies,
-                            Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
-                }
-            });
-        } else {
-            // TODO: do I need this after setting up retrofit callback?
-            // TODO: show alert message in Fragment, not Toast
-            // TODO: if get back from detail view, do not show message
-            Toast toast = Toast.makeText(getContext(), R.string.no_connection_alert,
-                    Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+        if (! InternetUtil.checkConnection(getContext())) {
+            // Should not even try sending requests if there is no connection
+            showErrorMessage(getContext());
+            return;
         }
+        Call<MoviesListApiResponse> call = RestClient.getService().getMovies(sorting,
+                VOTE_VALUE, ApiKey.getApiKey());
+        call.enqueue(new Callback<MoviesListApiResponse>() {
+            @Override
+            public void onResponse(Response<MoviesListApiResponse> response, Retrofit retrofit) {
+                MoviesListApiResponse moviesListResponse = response.body();
+                if (moviesListResponse != null) {
+                    mMoviesList = moviesListResponse.movies;
+                    imageAdapter = new ImageAdapter(getActivity(), mMoviesList);
+                    mGridView.setAdapter(imageAdapter);
+                } else {
+                    showErrorMessage(getContext());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                // TODO: show alert message in Fragment, not Toast, if (mMoviesList == null)
+                showErrorMessage(getContext());
+            }
+        });
     }
 
     private LoaderManager.LoaderCallbacks<Cursor> favoriteLoader =
@@ -104,7 +102,6 @@ public class MainActivityFragment extends Fragment {
 
                 @Override
                 public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                    // Return the loader for use
                     return new CursorLoader(getActivity(),
                             MovieContract.MovieEntry.CONTENT_URI, // URI
                             null, // projection fields
@@ -140,8 +137,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void createMoviesList() {
-        mMoviesList.clear();
-        sorting = getSorting();
+        String sorting = getSorting();
         if (favourite) {
             createFavMoviesList();
         } else {
@@ -150,8 +146,15 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mMoviesList != null && !favourite) {
+            outState.putParcelableArrayList("MoviesList", (ArrayList<? extends Parcelable>) mMoviesList);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO save state in bundle
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -168,8 +171,16 @@ public class MainActivityFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
+        // Call getSorting to init favourite depending on current setting
+        getSorting();
 
-        createMoviesList();
+        if (!favourite && savedInstanceState != null) {
+            mMoviesList = (List<Movie>)savedInstanceState.get("MoviesList");
+            imageAdapter = new ImageAdapter(getActivity(), mMoviesList);
+            mGridView.setAdapter(imageAdapter);
+        } else {
+            createMoviesList();
+        }
 
         mGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override

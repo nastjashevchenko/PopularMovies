@@ -151,7 +151,6 @@ public class DetailActivityFragment extends Fragment {
         if (trailers != null && trailers.size() > 0) {
             shareText = shareText + " " + trailers.get(0).getUri().toString();
         }
-        // TODO Only messaging works now as separate icon
         myShareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         myShareIntent.setType("text/*");
         if (mShareActionProvider != null) {

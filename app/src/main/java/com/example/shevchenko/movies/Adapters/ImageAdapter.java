@@ -7,17 +7,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.example.shevchenko.movies.R;
+import com.example.shevchenko.movies.model.Movie;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends BaseAdapter {
     private final Context mContext;
     private final List<String> mImageUrls;
 
-    public ImageAdapter(Context c, List<String> urls) {
+    public ImageAdapter(Context c, List<Movie> movies) {
         mContext = c;
-        mImageUrls = urls;
+        mImageUrls = new ArrayList<>();
+        for (Movie movie : movies) {
+            mImageUrls.add(movie.getPosterPath(Movie.DEFAULT_SIZE));
+        }
     }
     public int getCount() {
         return mImageUrls.size();
