@@ -49,6 +49,7 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
+        imageView.setAdjustViewBounds(true);
         Picasso.with(mContext)
                 .load(getItemUrl(position))
                 .placeholder(R.drawable.placeholder)

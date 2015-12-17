@@ -42,24 +42,18 @@ import retrofit.Retrofit;
 
 
 /**
- * A placeholder fragment containing a simple view.
+ * A nophoto fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
-    @Bind(R.id.title)
-    TextView mTitle;
-    @Bind(R.id.rating)
-    TextView mRating;
-    @Bind(R.id.release)
-    TextView mReleaseDate;
-    @Bind(R.id.plot)
-    TextView mPlot;
-    @Bind(R.id.poster)
-    ImageView mPoster;
-    @Bind(R.id.trailers)
-    ListView mTrailerList;
-    @Bind(R.id.reviews)
-    ListView mReviews;
-    @Bind(R.id.favorite) Button mLike;
+    @Bind(R.id.title) TextView mTitle;
+    @Bind(R.id.rating) TextView mRating;
+    @Bind(R.id.release) TextView mReleaseDate;
+    @Bind(R.id.plot) TextView mPlot;
+    @Bind(R.id.poster) ImageView mPoster;
+    @Bind(R.id.trailers) ListView mTrailerList;
+    @Bind(R.id.reviews) ListView mReviews;
+    @Bind(R.id.favorite)
+    Button mLike;
     List<Video> trailers;
     Movie mMovie;
     Context mContext;
@@ -102,7 +96,8 @@ public class DetailActivityFragment extends Fragment {
                 if (videos != null) {
                     trailers = videos.videos;
                     // When we get trailers list, we should update share intent to add trailer's URL
-                    setShareIntent();
+                    if (mMovie != null) setShareIntent();
+
                     mTrailerList.setAdapter(new TrailerAdapter(getContext(), trailers));
                     setListViewHeightBasedOnChildren(mTrailerList);
 
@@ -152,7 +147,7 @@ public class DetailActivityFragment extends Fragment {
             shareText = shareText + " " + trailers.get(0).getUri().toString();
         }
         myShareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-        myShareIntent.setType("text/*");
+        myShareIntent.setType("text/plain");
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(myShareIntent);
         }
@@ -163,7 +158,7 @@ public class DetailActivityFragment extends Fragment {
         inflater.inflate(R.menu.menu_detail, menu);
         MenuItem item = menu.findItem(R.id.menu_item_share);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-        setShareIntent();
+        if (mMovie != null) setShareIntent();
         super.onCreateOptionsMenu(menu,inflater);
     }
 
@@ -180,41 +175,47 @@ public class DetailActivityFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         mContext = getContext();
-        mMovie = getActivity().getIntent().getParcelableExtra(Movie.EXTRA_NAME);
 
-        mTitle.setText(mMovie.getTitle());
-        mReleaseDate.setText(getResources().getString(R.string.release_date,
-                mMovie.getReleaseDate()));
+        Bundle arguments = this.getArguments();
+        if (arguments != null) {
+            mMovie = arguments.getParcelable(Movie.EXTRA_NAME);
+        }
 
-        // TODO Idea - show 3-5 lines and make it expandable
-        mPlot.setText(mMovie.getOverview());
-        mRating.setText(getResources().getString(R.string.rating,
-                mMovie.getVoteAverage()));
-        //TODO Change to icons
-        mLike.setText(mMovie.isFavorite(mContext) ? "Unlike" : "Like");
+        if (mMovie != null) {
+            mTitle.setText(mMovie.getTitle());
+            mReleaseDate.setText(getResources().getString(R.string.release_date,
+                    mMovie.getReleaseDate()));
 
-        mLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMovie.isFavorite(mContext)) {
-                    mMovie.deleteFavorite(mContext);
-                    mLike.setText("Like");
-                } else {
-                    mMovie.addFavorite(mContext);
-                    mLike.setText("Unlike");
+            // TODO Idea - show 3-5 lines and make it expandable
+            mPlot.setText(mMovie.getOverview());
+            mRating.setText(getResources().getString(R.string.rating,
+                    mMovie.getVoteAverage()));
+            //TODO Change to icons
+            //mLike.setImageResource(R.drawable.ic_favorite_black_24dp);
+            mLike.setText(mMovie.isFavorite(mContext) ? "Unlike" : "Like");
+
+            mLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mMovie.isFavorite(mContext)) {
+                        mMovie.deleteFavorite(mContext);
+                        mLike.setText("Like");
+                    } else {
+                        mMovie.addFavorite(mContext);
+                        mLike.setText("Unlike");
+                    }
                 }
-            }
-        });
+            });
 
-        getTrailers(mMovie);
-        // TODO Add reviews block title if any reviews present
-        getReviews(mMovie);
+            getTrailers(mMovie);
+            // TODO Add reviews block title if any reviews present
+            getReviews(mMovie);
 
-        Picasso.with(getActivity())
-                .load(mMovie.getPosterPath(Movie.DEFAULT_SIZE))
-                .placeholder(R.drawable.placeholder)
-                .into(mPoster);
-
+            Picasso.with(getActivity())
+                    .load(mMovie.getPosterPath(Movie.DEFAULT_SIZE))
+                    .placeholder(R.drawable.placeholder)
+                    .into(mPoster);
+        }
         return rootView;
     }
 }

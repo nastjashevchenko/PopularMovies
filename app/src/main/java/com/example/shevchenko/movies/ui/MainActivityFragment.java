@@ -1,7 +1,6 @@
 package com.example.shevchenko.movies.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -50,7 +49,10 @@ public class MainActivityFragment extends Fragment {
     private MovieCursorAdapter favAdapter;
     private ImageAdapter imageAdapter;
     private boolean favourite;
-    private static final String VOTE_VALUE = "100";
+    private int mPosition;
+    private static final String VOTE_VALUE = "50";
+    private static final String POSITION_KEY = "Position";
+    private static final String MOVIES_LIST_KEY = "MoviesList";
 
     public MainActivityFragment() {
     }
@@ -148,8 +150,11 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (mPosition != -1) {
+            outState.putInt(POSITION_KEY, mPosition);
+        }
         if (mMoviesList != null && !favourite) {
-            outState.putParcelableArrayList("MoviesList", (ArrayList<? extends Parcelable>) mMoviesList);
+            outState.putParcelableArrayList(MOVIES_LIST_KEY, (ArrayList<? extends Parcelable>) mMoviesList);
         }
     }
 
@@ -174,24 +179,31 @@ public class MainActivityFragment extends Fragment {
         // Call getSorting to init favourite depending on current setting
         getSorting();
 
-        if (!favourite && savedInstanceState != null) {
-            mMoviesList = (List<Movie>)savedInstanceState.get("MoviesList");
+        if (!favourite && savedInstanceState != null && savedInstanceState.containsKey(MOVIES_LIST_KEY)) {
+            mMoviesList = (List<Movie>)savedInstanceState.get(MOVIES_LIST_KEY);
             imageAdapter = new ImageAdapter(getActivity(), mMoviesList);
             mGridView.setAdapter(imageAdapter);
         } else {
             createMoviesList();
         }
+        if (savedInstanceState != null && savedInstanceState.containsKey(POSITION_KEY)) {
+            mPosition = savedInstanceState.getInt(POSITION_KEY);
+        }
+        mGridView.smoothScrollToPosition(mPosition);
 
         mGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                mPosition = position;
                 Movie movie = mMoviesList.get(position);
-                Intent movieDetails = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Movie.EXTRA_NAME, movie);
-                startActivity(movieDetails);
+                ((ItemClickCallback) getActivity()).onItemClick(movie, position);
             }
         });
         return view;
+    }
+
+    interface ItemClickCallback {
+        void onItemClick(Movie movie, int position);
     }
 }
