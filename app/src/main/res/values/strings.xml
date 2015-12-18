@@ -16,7 +16,6 @@
     <string name="rating">Rating: %s</string>
 
     <!-- User messages -->
-    <string name="no_connection_alert">Sorry, no Movies without Internet</string>
     <string name="cant_load_movies">Sorry, some content can not be loaded</string>
     <string name="share">Share</string>
     <string name="fav_button_desc">Favourite movie</string>

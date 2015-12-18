@@ -21,7 +21,7 @@ public class ImageAdapter extends BaseAdapter {
         mContext = c;
         mImageUrls = new ArrayList<>();
         for (Movie movie : movies) {
-            mImageUrls.add(movie.getPosterPath(Movie.DEFAULT_SIZE));
+            mImageUrls.add(movie.getPosterPath());
         }
     }
     public int getCount() {

@@ -42,7 +42,7 @@ import retrofit.Retrofit;
 
 
 /**
- * A nophoto fragment containing a simple view.
+ * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
     @Bind(R.id.title) TextView mTitle;
@@ -55,12 +55,12 @@ public class DetailActivityFragment extends Fragment {
     @Bind(R.id.favorite) Button mLike;
     @Bind(R.id.reviews_header) TextView mReviewsHeader;
     @Bind(R.id.trailers_header) TextView mTrailersHeader;
-    List<Video> trailers;
-    Movie mMovie;
-    Context mContext;
-    ShareActionProvider mShareActionProvider;
+    private List<Video> trailers;
+    private Movie mMovie;
+    private Context mContext;
+    private ShareActionProvider mShareActionProvider;
 
-    // This function was taken from Stackoverflow answers as ready solution on how to put
+    // This function was taken from Stackoverflow answers as solution on how to put
     // ListView inside ScrollView and make it look good
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -214,7 +214,7 @@ public class DetailActivityFragment extends Fragment {
             getReviews(mMovie);
 
             Picasso.with(getActivity())
-                    .load(mMovie.getPosterPath(Movie.DEFAULT_SIZE))
+                    .load(mMovie.getPosterPath())
                     .placeholder(R.drawable.placeholder)
                     .into(mPoster);
         }

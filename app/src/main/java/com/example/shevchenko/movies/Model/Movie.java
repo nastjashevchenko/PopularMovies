@@ -32,8 +32,8 @@ public class Movie implements Parcelable {
         return id;
     }
 
-    public String getPosterPath(String size) {
-        return BASE_PATH + size + posterPath;
+    public String getPosterPath() {
+        return BASE_PATH + DEFAULT_SIZE + posterPath;
     }
 
     public String getTitle() {
@@ -69,7 +69,9 @@ public class Movie implements Parcelable {
                 new String[]{id},
                 null
         );
-        return (cursor != null && cursor.getCount() > 0);
+        boolean isFavourite = (cursor != null && cursor.getCount() > 0);
+        if (cursor != null) cursor.close();
+        return isFavourite;
     }
 
     public void deleteFavorite(Context c) {
@@ -86,7 +88,7 @@ public class Movie implements Parcelable {
         movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE, releaseDate);
         movieValues.put(MovieContract.MovieEntry.COLUMN_RATING, voteAverage);
         movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, overview);
-        movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, getPosterPath(DEFAULT_SIZE));
+        movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, getPosterPath());
 
         c.getContentResolver().insert(
                 MovieContract.MovieEntry.CONTENT_URI,
