@@ -51,7 +51,6 @@ public class ReviewAdapter extends BaseAdapter {
 
         ButterKnife.bind(this, convertView);
         mAuthor.setText(review.getAuthor());
-        // TODO make reviews collapsable-expandable
         mText.setText(review.getContent());
         return convertView;
     }

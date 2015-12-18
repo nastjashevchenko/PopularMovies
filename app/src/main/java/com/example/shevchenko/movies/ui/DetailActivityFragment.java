@@ -116,7 +116,7 @@ public class DetailActivityFragment extends Fragment {
 
             @Override
             public void onFailure(Throwable t) {
-                // TODO
+                // Do nothing, if we can not load trailers, just do not show it
             }
         });
     }
@@ -138,7 +138,7 @@ public class DetailActivityFragment extends Fragment {
 
             @Override
             public void onFailure(Throwable t) {
-                // TODO
+                // Do nothing, if we can not load reviews, just do not show it
             }
         });
     }
@@ -190,7 +190,6 @@ public class DetailActivityFragment extends Fragment {
             mReleaseDate.setText(getResources().getString(R.string.release_date,
                     mMovie.getReleaseDate()));
 
-            // TODO Idea - show 3-5 lines and make it expandable
             mPlot.setText(mMovie.getOverview());
             mRating.setText(getResources().getString(R.string.rating,
                     mMovie.getVoteAverage()));
@@ -212,7 +211,6 @@ public class DetailActivityFragment extends Fragment {
             });
 
             getTrailers(mMovie);
-            // TODO Add reviews block title if any reviews present
             getReviews(mMovie);
 
             Picasso.with(getActivity())

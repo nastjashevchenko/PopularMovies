@@ -94,7 +94,6 @@ public class MainActivityFragment extends Fragment {
 
             @Override
             public void onFailure(Throwable t) {
-                // TODO: show alert message in Fragment, not Toast, if (mMoviesList == null)
                 showErrorMessage(getContext());
             }
         });

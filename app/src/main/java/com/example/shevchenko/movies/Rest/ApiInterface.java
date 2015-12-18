@@ -11,9 +11,6 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 
 public interface ApiInterface {
-
-    // TODO get rid of api_key in every query
-
     @GET("discover/movie")
     Call<MoviesListApiResponse> getMovies(
             @Query("sort_by") String sort,
