@@ -86,6 +86,7 @@ public class MainActivityFragment extends Fragment {
                     mMoviesList = moviesListResponse.movies;
                     imageAdapter = new ImageAdapter(getActivity(), mMoviesList);
                     mGridView.setAdapter(imageAdapter);
+                    if (mPosition != -1) mGridView.smoothScrollToPosition(mPosition);
                 } else {
                     showErrorMessage(getContext());
                 }
@@ -122,6 +123,7 @@ public class MainActivityFragment extends Fragment {
                     while (data.moveToNext()) {
                         mMoviesList.add(new Movie(data));
                     }
+                    if (mPosition != -1) mGridView.smoothScrollToPosition(mPosition);
                 }
 
                 @Override
@@ -189,7 +191,6 @@ public class MainActivityFragment extends Fragment {
         if (savedInstanceState != null && savedInstanceState.containsKey(POSITION_KEY)) {
             mPosition = savedInstanceState.getInt(POSITION_KEY);
         }
-        mGridView.smoothScrollToPosition(mPosition);
 
         mGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override

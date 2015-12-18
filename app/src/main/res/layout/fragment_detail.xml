@@ -75,6 +75,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/plot" />
 
+        <TextView
+            android:id="@+id/trailers_header"
+            style="@style/DetailsSubheader"
+            android:text="@string/trailers_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,11 +90,18 @@
             android:id="@+id/trailers"
             tools:ignore="NestedScrolling" />
 
-        <ListView
+        <TextView
+            android:id="@+id/reviews_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/title_margin_bottom"
-            android:divider="@android:color/transparent"
+            android:text="@string/reviews_header"
+            style="@style/DetailsSubheader"/>
+
+        <ListView
+            android:divider="@color/header_background"
+            android:dividerHeight="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/reviews"
             tools:ignore="NestedScrolling" />
     </LinearLayout>

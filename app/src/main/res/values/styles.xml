@@ -5,4 +5,14 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="DetailsSubheader" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_marginTop">@dimen/title_margin_bottom</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/subheader_margin</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:background">@color/header_background</item>
+        <item name="android:textColor">@color/header_text</item>
+    </style>
+
 </resources>

@@ -3,6 +3,7 @@ package com.example.shevchenko.movies.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +19,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.ItemClickCallback{
     private boolean mTwoPane;
-    @Bind(R.id.movie_detail_container) FrameLayout mDetailContainer;
+    @Nullable @Bind(R.id.movie_detail_container) FrameLayout mDetailContainer;
     private static final String DETAILFRAGMENT_TAG = "DETAIL_FRAGMENT";
     private static final String SELECTED_TAG = "isMovieSelected";
     private String sorting;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         setContentView(R.layout.activity_main);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         ButterKnife.bind(this);
+
         sorting = PreferenceManager.getDefaultSharedPreferences(this).getString(
                 getString(R.string.pref_sorting_key), getString(R.string.pref_sorting_default));
 
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         String currentSorting = PreferenceManager.getDefaultSharedPreferences(this).getString(
                 getString(R.string.pref_sorting_key), getString(R.string.pref_sorting_default));
         if (!sorting.equals(currentSorting)) {
-            mDetailContainer.setVisibility(View.GONE);
+            if (mTwoPane) mDetailContainer.setVisibility(View.GONE);
             sorting = currentSorting;
             isMovieSelected = false;
         }

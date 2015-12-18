@@ -19,7 +19,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Medium Text"
         android:id="@+id/review_text"
-        android:maxLines="3"
         android:layout_marginBottom="@dimen/list_element_padding"/>
 
 </LinearLayout>

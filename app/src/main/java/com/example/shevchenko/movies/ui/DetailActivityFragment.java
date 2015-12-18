@@ -52,8 +52,9 @@ public class DetailActivityFragment extends Fragment {
     @Bind(R.id.poster) ImageView mPoster;
     @Bind(R.id.trailers) ListView mTrailerList;
     @Bind(R.id.reviews) ListView mReviews;
-    @Bind(R.id.favorite)
-    Button mLike;
+    @Bind(R.id.favorite) Button mLike;
+    @Bind(R.id.reviews_header) TextView mReviewsHeader;
+    @Bind(R.id.trailers_header) TextView mTrailersHeader;
     List<Video> trailers;
     Movie mMovie;
     Context mContext;
@@ -101,6 +102,8 @@ public class DetailActivityFragment extends Fragment {
                     mTrailerList.setAdapter(new TrailerAdapter(getContext(), trailers));
                     setListViewHeightBasedOnChildren(mTrailerList);
 
+                    if (trailers != null && trailers.size() > 0) mTrailersHeader.setVisibility(View.VISIBLE);
+
                     mTrailerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -129,6 +132,7 @@ public class DetailActivityFragment extends Fragment {
                     final List<Review> reviews = reviewResponse.reviews;
                     mReviews.setAdapter(new ReviewAdapter(getContext(), reviews));
                     setListViewHeightBasedOnChildren(mReviews);
+                    if (reviews != null && reviews.size() > 0) mReviewsHeader.setVisibility(View.VISIBLE);
                 }
             }
 
