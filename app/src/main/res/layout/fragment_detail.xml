@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.shevchenko.movies.ui.DetailActivityFragment"
     android:orientation="vertical">
 
@@ -50,8 +51,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_gravity = "center_vertical">
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -62,10 +62,15 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/release" />
 
-                <Button
+                <android.support.design.widget.FloatingActionButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/favorite"
+                    app:fabSize="normal"
+                    app:backgroundTint="@color/button_accent"
+                    android:tint="#ffffff"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="@dimen/subheader_margin"
                     android:contentDescription="@string/fav_button_desc" />
             </LinearLayout>
         </LinearLayout>

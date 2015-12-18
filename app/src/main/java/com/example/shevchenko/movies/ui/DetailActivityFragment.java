@@ -3,6 +3,7 @@ package com.example.shevchenko.movies.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
@@ -13,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -52,7 +52,7 @@ public class DetailActivityFragment extends Fragment {
     @Bind(R.id.poster) ImageView mPoster;
     @Bind(R.id.trailers) ListView mTrailerList;
     @Bind(R.id.reviews) ListView mReviews;
-    @Bind(R.id.favorite) Button mLike;
+    @Bind(R.id.favorite) FloatingActionButton mLike;
     @Bind(R.id.reviews_header) TextView mReviewsHeader;
     @Bind(R.id.trailers_header) TextView mTrailersHeader;
     private List<Video> trailers;
@@ -193,19 +193,19 @@ public class DetailActivityFragment extends Fragment {
             mPlot.setText(mMovie.getOverview());
             mRating.setText(getResources().getString(R.string.rating,
                     mMovie.getVoteAverage()));
-            //TODO Change to icons
-            //mLike.setImageResource(R.drawable.ic_favorite_black_24dp);
-            mLike.setText(mMovie.isFavorite(mContext) ? "Unlike" : "Like");
+            mLike.setImageResource(mMovie.isFavorite(mContext) ? R.drawable.unlike : R.drawable.like);
+
 
             mLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mMovie.isFavorite(mContext)) {
                         mMovie.deleteFavorite(mContext);
-                        mLike.setText("Like");
+                        mLike.setImageResource(R.drawable.like);
                     } else {
                         mMovie.addFavorite(mContext);
-                        mLike.setText("Unlike");
+                        mLike.setImageResource(R.drawable.unlike);
+
                     }
                 }
             });
