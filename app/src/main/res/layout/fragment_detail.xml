@@ -33,25 +33,27 @@
         tools:context="com.example.shevchenko.movies.ui.DetailActivityFragment">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/poster"
-                android:adjustViewBounds="true"
-                android:layout_marginRight="@dimen/poster_margin_right"
-                android:layout_marginEnd="@dimen/poster_margin_right"
-                android:layout_marginBottom="@dimen/poster_margin_bottom"
-                android:contentDescription="@string/image_description" />
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/poster_margin_bottom">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_gravity="bottom"
+                android:gravity="end">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/favorite"
+                    app:backgroundTint="@color/button_accent"
+                    android:tint="@color/header_text"
+                    android:layout_margin="@dimen/fab_padding"
+                    android:contentDescription="@string/fav_button_desc" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -62,17 +64,17 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/release" />
 
-                <android.support.design.widget.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/favorite"
-                    app:fabSize="normal"
-                    app:backgroundTint="@color/button_accent"
-                    android:tint="#ffffff"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="@dimen/subheader_margin"
-                    android:contentDescription="@string/fav_button_desc" />
             </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/poster"
+                android:adjustViewBounds="true"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:layout_marginLeft="@dimen/poster_margin_right"
+                android:layout_marginStart="@dimen/poster_margin_right"
+                android:contentDescription="@string/image_description" />
         </LinearLayout>
 
         <TextView
