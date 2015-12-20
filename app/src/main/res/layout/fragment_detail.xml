@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:background="@color/header_background"
-        android:textColor="@color/header_text"
+        android:background="@color/primary"
+        android:textColor="@color/text"
         android:padding="@dimen/title_padding"/>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -49,8 +49,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/favorite"
-                    app:backgroundTint="@color/button_accent"
-                    android:tint="@color/header_text"
+                    app:backgroundTint="@color/accent"
+                    android:tint="@color/text"
                     android:layout_margin="@dimen/fab_padding"
                     android:contentDescription="@string/fav_button_desc" />
 
@@ -105,7 +105,7 @@
             style="@style/DetailsSubheader"/>
 
         <ListView
-            android:divider="@color/header_background"
+            android:divider="@color/primary"
             android:dividerHeight="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

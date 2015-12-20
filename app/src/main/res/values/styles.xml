@@ -11,8 +11,12 @@
         <item name="android:textStyle">bold</item>
         <item name="android:padding">@dimen/subheader_margin</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:background">@color/header_background</item>
-        <item name="android:textColor">@color/header_text</item>
+        <item name="android:background">@color/primary</item>
+        <item name="android:textColor">@color/text</item>
     </style>
 
+    <style name="NoMoviesMessage" parent="@android:style/TextAppearance.Large">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/dark</item>
+    </style>
 </resources>

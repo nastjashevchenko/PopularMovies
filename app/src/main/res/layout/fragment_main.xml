@@ -1,6 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_background"
     tools:context=".MainActivityFragment">
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,4 +15,32 @@
         android:horizontalSpacing="@dimen/movie_horizontal_spacing"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/no_fav_movies_message"
+        android:visibility="gone"
+        style="@style/NoMoviesMessage"
+        android:text="@string/no_fav_movies_message"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/cant_load_movies"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/NoMoviesMessage"
+            android:id="@+id/cant_load_movies_message"
+            android:text="@string/cant_load_movies_message" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/try_again"
+            android:text="@string/try_again_button_text"/>
+    </LinearLayout>
 </RelativeLayout>

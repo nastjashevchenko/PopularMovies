@@ -16,9 +16,11 @@
     <string name="rating">Rating: %s</string>
 
     <!-- User messages -->
-    <string name="cant_load_movies">Sorry, some content can not be loaded</string>
     <string name="share">Share</string>
     <string name="fav_button_desc">Favourite movie</string>
     <string name="reviews_header">Reviews</string>
     <string name="trailers_header">Trailers</string>
+    <string name="no_fav_movies_message">No favourite movies yet</string>
+    <string name="cant_load_movies_message">Can not load movies</string>
+    <string name="try_again_button_text">TRY AGAIN</string>
 </resources>

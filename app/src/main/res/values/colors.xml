@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="header_background">#11C2BF</color>
-    <color name="header_text">#F9F3F3</color>
-    <color name="button_accent">#D500F9</color>
+    <color name="primary">#00BCD4</color>
+    <color name="text">#FFFFFF</color>
+    <color name="accent">#E040FB</color>
+    <color name="light_background">#E9E9FB</color>
+    <color name="dark">#00454D</color>
 </resources>

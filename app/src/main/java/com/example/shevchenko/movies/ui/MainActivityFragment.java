@@ -1,6 +1,5 @@
 package com.example.shevchenko.movies.ui;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -9,14 +8,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.shevchenko.movies.ApiKey;
 import com.example.shevchenko.movies.InternetUtil;
@@ -42,14 +42,17 @@ import retrofit.Retrofit;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-    // Don't really think that there is sense in binding when there is only one view
-    // Keeping it for consistency with DetailActivityFragment
     @Bind(R.id.movies_grid) GridView mGridView;
+    @Bind(R.id.no_fav_movies_message) TextView mNoFavMovies;
+    @Bind(R.id.cant_load_movies) LinearLayout mNoOnlineMovies;
+    @Bind(R.id.try_again) Button mTryAgain;
+
     private List<Movie> mMoviesList = new ArrayList<>();
     private MovieCursorAdapter favAdapter;
     private ImageAdapter imageAdapter;
     private boolean favourite;
     private int mPosition;
+    private String mSorting;
     private static final String VOTE_VALUE = "50";
     private static final String POSITION_KEY = "Position";
     private static final String MOVIES_LIST_KEY = "MoviesList";
@@ -57,23 +60,26 @@ public class MainActivityFragment extends Fragment {
     public MainActivityFragment() {
     }
 
-    private String getSorting() {
+    private boolean updateSorting() {
         String sorting = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(
                 getString(R.string.pref_sorting_key), getString(R.string.pref_sorting_default));
+        // If mSorting is not initialized yet, do not consider it was changed
         favourite = (sorting.equals(getString(R.string.favourite)));
-        return sorting;
+        boolean isChanged = (mSorting != null && !mSorting.equals(sorting));
+        mSorting = sorting;
+        return isChanged;
     }
 
-    private void showErrorMessage(Context c) {
-        Toast toast = Toast.makeText(getActivity(), R.string.cant_load_movies, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+    private void showCantLoadMoviesBlock() {
+        mNoOnlineMovies.setVisibility(View.VISIBLE);
+        mMoviesList = new ArrayList<>();
+        mGridView.setAdapter(null);
     }
 
     private void createOnlineMoviesList(String sorting){
         if (! InternetUtil.checkConnection(getContext())) {
             // Should not even try sending requests if there is no connection
-            showErrorMessage(getContext());
+            showCantLoadMoviesBlock();
             return;
         }
         Call<MoviesListApiResponse> call = RestClient.getService().getMovies(sorting,
@@ -88,13 +94,13 @@ public class MainActivityFragment extends Fragment {
                     mGridView.setAdapter(imageAdapter);
                     if (mPosition != -1) mGridView.smoothScrollToPosition(mPosition);
                 } else {
-                    showErrorMessage(getContext());
+                    showCantLoadMoviesBlock();
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                showErrorMessage(getContext());
+                showCantLoadMoviesBlock();
             }
         });
     }
@@ -116,9 +122,13 @@ public class MainActivityFragment extends Fragment {
                 @Override
                 public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                     favAdapter.swapCursor(data);
-                    if (mMoviesList.size() > 0) {
-                        mMoviesList.clear();
+                    // If no fav moves in DB, simply show message about it
+                    if (data.getCount() == 0) {
+                        mNoFavMovies.setVisibility(View.VISIBLE);
+                        return;
                     }
+                    // Update mMoviesList from Cursor
+                    mMoviesList = new ArrayList<>();
                     while (data.moveToNext()) {
                         mMoviesList.add(new Movie(data));
                     }
@@ -140,11 +150,15 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void createMoviesList() {
-        String sorting = getSorting();
+        // Before updating, hide all messages for empty movie list and show it depending on
+        // createMovieList results
+        mNoFavMovies.setVisibility(View.GONE);
+        mNoOnlineMovies.setVisibility(View.GONE);
+
         if (favourite) {
             createFavMoviesList();
         } else {
-            createOnlineMoviesList(sorting);
+            createOnlineMoviesList(mSorting);
         }
     }
 
@@ -168,7 +182,11 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        createMoviesList();
+        // Need to update list onResume only if sorting type was changed or type is Favourite
+        // Need to update Favourites every time in case user unliked movie from detailed view
+        if (updateSorting() || favourite) {
+            createMoviesList();
+        }
     }
 
     @Override
@@ -177,9 +195,11 @@ public class MainActivityFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        // Call getSorting to init favourite depending on current setting
-        getSorting();
 
+        // Call updateSorting to init favourite and sorting depending on current setting
+        updateSorting();
+
+        // Restore from savedInstance if we have anything in Bundle, else load list online or from DB
         if (!favourite && savedInstanceState != null && savedInstanceState.containsKey(MOVIES_LIST_KEY)) {
             mMoviesList = (List<Movie>)savedInstanceState.get(MOVIES_LIST_KEY);
             imageAdapter = new ImageAdapter(getActivity(), mMoviesList);
@@ -187,6 +207,7 @@ public class MainActivityFragment extends Fragment {
         } else {
             createMoviesList();
         }
+
         if (savedInstanceState != null && savedInstanceState.containsKey(POSITION_KEY)) {
             mPosition = savedInstanceState.getInt(POSITION_KEY);
         }
@@ -198,6 +219,14 @@ public class MainActivityFragment extends Fragment {
                 mPosition = position;
                 Movie movie = mMoviesList.get(position);
                 ((ItemClickCallback) getActivity()).onItemClick(movie, position);
+            }
+        });
+
+        // If was not able to load movies, can re-try by clicking Try Again button
+        mTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createMoviesList();
             }
         });
         return view;
