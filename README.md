@@ -6,9 +6,9 @@ to run it, please, add ApiKey class with getApiKey() method, which returns
 String with API key.
 
 ## App screens
-![phone_screens](http://imgur.com/FTyzNl8)
-![phone_screens](http://imgur.com/clrpbAF)
-![phone_screens](http://imgur.com/vU0VQkA)
+![phone_screens](http://i.imgur.com/FIh5w8S.png?1)
+![phone_screens](http://i.imgur.com/AsgXyIP.png?1)
+![phone_screens](http://i.imgur.com/ytGpMjS.png?1)
+![phone_screens](http://i.imgur.com/8LCxvTj.png?1)
 
-![tablet_screens](http://imgur.com/LvW4zEU)
-![tablet_screens](http://imgur.com/jMnmEMn)
+![tablet_screens](http://i.imgur.com/Fce6VAt.png?1)
