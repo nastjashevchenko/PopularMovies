@@ -21,7 +21,6 @@ public class Movie implements Parcelable {
 
     private static final String BASE_PATH = "http://image.tmdb.org/t/p/";
     public static final String DEFAULT_SIZE = "w500";
-    public static final String DETAILS_SIZE = "w342";
     public static final String EXTRA_NAME = "movie_details";
 
     public Movie(String id) {
